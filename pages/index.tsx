@@ -5,6 +5,7 @@ import Box from "@mui/material/Box";
 import { Layout } from "../components/Layout";
 import { NextPage } from "next";
 
+// TODO: с зависимсотями разобраться
 const Index: NextPage = () => {
   return (
     <Layout>

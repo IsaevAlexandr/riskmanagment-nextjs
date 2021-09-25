@@ -22,6 +22,8 @@ import AlbumIcon from "@mui/icons-material/Album";
 import { NextLinkComposed } from "../src/Link";
 import { useRouter } from "next/router";
 import { Logo } from "./Logo";
+import { AuthUserMenu } from "./AuthUserMenu";
+import { useSession } from "next-auth/client";
 
 const drawerWidth = 320;
 
@@ -96,9 +98,9 @@ const Drawer = styled(MuiDrawer, {
 
 export const Layout: React.FC = ({ children }) => {
   const theme = useTheme();
+  const [session] = useSession();
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
-
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -110,24 +112,22 @@ export const Layout: React.FC = ({ children }) => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        open={open}
-        sx={{ bgcolor: "#fff" }}
-      >
+      <AppBar position="fixed" open={open} sx={{ bgcolor: "#fff" }}>
         <Toolbar>
-          <IconButton
-            color="primary"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: (t) => t.spacing(4),
-              ...(open && { display: "none" }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
+          {session && (
+            <IconButton
+              color="primary"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{
+                marginRight: (t) => t.spacing(4),
+                ...(open && { display: "none" }),
+              }}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
 
           <Logo />
 
@@ -139,55 +139,59 @@ export const Layout: React.FC = ({ children }) => {
           >
             СОН - Cистема обеспечения непрерывности
           </Typography>
+
+          {session && <AuthUserMenu username={session.user?.name} />}
         </Toolbar>
       </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "rtl" ? (
-              <ChevronRightIcon />
-            ) : (
-              <ChevronLeftIcon />
-            )}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          <ListItemButton
-            component={NextLinkComposed}
-            to="/"
-            selected={router.pathname === "/"}
-          >
-            <ListItemIcon>
-              <GridViewIcon />
-            </ListItemIcon>
+      {session && (
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "rtl" ? (
+                <ChevronRightIcon />
+              ) : (
+                <ChevronLeftIcon />
+              )}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            <ListItemButton
+              component={NextLinkComposed}
+              to="/"
+              selected={router.pathname === "/"}
+            >
+              <ListItemIcon>
+                <GridViewIcon />
+              </ListItemIcon>
 
-            <ListItemText primary="Управление рисками" />
-          </ListItemButton>
+              <ListItemText primary="Управление рисками" />
+            </ListItemButton>
 
-          <ListItemButton
-            component={NextLinkComposed}
-            to="/monitoring"
-            selected={router.pathname === "/monitoring"}
-          >
-            <ListItemIcon>
-              <AlbumIcon />
-            </ListItemIcon>
-            <ListItemText primary="Мониторинг рисков" />
-          </ListItemButton>
+            <ListItemButton
+              component={NextLinkComposed}
+              to="/monitoring"
+              selected={router.pathname === "/monitoring"}
+            >
+              <ListItemIcon>
+                <AlbumIcon />
+              </ListItemIcon>
+              <ListItemText primary="Мониторинг рисков" />
+            </ListItemButton>
 
-          <ListItemButton
-            component={NextLinkComposed}
-            to="/events"
-            selected={router.pathname === "/events"}
-          >
-            <ListItemIcon>
-              <EventNoteIcon />
-            </ListItemIcon>
-            <ListItemText primary="Планирование мероприятий" />
-          </ListItemButton>
-        </List>
-      </Drawer>
+            <ListItemButton
+              component={NextLinkComposed}
+              to="/events"
+              selected={router.pathname === "/events"}
+            >
+              <ListItemIcon>
+                <EventNoteIcon />
+              </ListItemIcon>
+              <ListItemText primary="Планирование мероприятий" />
+            </ListItemButton>
+          </List>
+        </Drawer>
+      )}
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
         {children}

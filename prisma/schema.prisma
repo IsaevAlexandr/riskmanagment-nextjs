@@ -1,0 +1,106 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+// https://next-auth.js.org/adapters/prisma all about user from docs
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  oauth_token_secret String?
+  oauth_token        String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Credentials {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  salt   String
+  hash   String
+}
+
+model User {
+  id            String       @id @default(cuid())
+  name          String?
+  email         String?      @unique
+  username      String?      @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  credentials   Credentials?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Risk {
+  id                           Int    @id @default(autoincrement())
+  name                         String
+  description                  String
+  category                     String
+  reason                       String
+  probability_before           Float
+  time_recovery_before         Float
+  costs_recovery_after         Float
+  costs_recovery_before        Float
+  measure_probability_presence String
+  probability_after            Float
+  time_recovery_after          Float
+  business_process             String
+  risk_owner                   String
+}
+
+model Event {
+  id                   Int    @id @default(autoincrement())
+  event                String
+  description          String
+  risk                 String
+  riskNum              String
+  probabilityBefore    Float
+  probabilityAfter     Float
+  lossesBefore         Float
+  lossesAfter          Float
+  riskAssessmentBefore Float
+  riskAssessmentAfter  Float
+  startDate            Float
+  endDate              String
+  totalCost            String
+  responsible          String
+  status               String
+}
