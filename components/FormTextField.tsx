@@ -1,17 +1,9 @@
-import {
-  TextField as MuiTextField,
-  TextFieldProps as MuiTextFieldProps,
-} from "@mui/material";
-import {
-  Field,
-  FieldMetaState,
-  FieldProps,
-  FieldRenderProps,
-} from "react-final-form";
+import { TextField as MuiTextField, TextFieldProps as MuiTextFieldProps } from '@mui/material';
+import { Field, FieldMetaState, FieldProps, FieldRenderProps } from 'react-final-form';
 
 export type ShowErrorFunc<T> = (props: ShowErrorProps<T>) => boolean;
 
-export type TextFieldProps<T> = Partial<Omit<MuiTextFieldProps, "onChange">> & {
+export type TextFieldProps<T> = Partial<Omit<MuiTextFieldProps, 'onChange'>> & {
   name: string;
   fieldProps?: Partial<FieldProps<T, any>>;
   showError?: ShowErrorFunc<T>;
@@ -23,10 +15,7 @@ export interface ShowErrorProps<T> {
 export function showErrorOnChange<T>({
   meta: { submitError, dirtySinceLastSubmit, error, touched, modified },
 }: ShowErrorProps<T>) {
-  return !!(
-    ((submitError && !dirtySinceLastSubmit) || error) &&
-    (touched || modified)
-  );
+  return !!(((submitError && !dirtySinceLastSubmit) || error) && (touched || modified));
 }
 
 type TextWrapperProps = FieldRenderProps<MuiTextFieldProps>;

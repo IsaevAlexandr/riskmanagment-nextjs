@@ -1,9 +1,10 @@
-import * as React from "react";
-import Container from "@mui/material/Container";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import { Layout } from "../components/Layout";
-import { NextPage } from "next";
+import * as React from 'react';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import { NextPage } from 'next';
+
+import { Layout } from '../components/Layout';
 
 // TODO: с зависимсотями разобраться
 const Index: NextPage = () => {

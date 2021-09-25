@@ -1,14 +1,7 @@
-import React from "react";
-import {
-  Button,
-  ListItemIcon,
-  ListItemText,
-  Menu,
-  MenuItem,
-  useTheme,
-} from "@mui/material";
-import { AccountCircle, ExitToApp } from "@mui/icons-material";
-import { signOut } from "next-auth/client";
+import React from 'react';
+import { Button, ListItemIcon, ListItemText, Menu, MenuItem, useTheme } from '@mui/material';
+import { AccountCircle, ExitToApp } from '@mui/icons-material';
+import { signOut } from 'next-auth/client';
 
 interface AuthUserMenuProps {
   username?: string | null;
@@ -37,13 +30,13 @@ export const AuthUserMenu: React.FC<AuthUserMenuProps> = ({ username }) => {
         id="menu-appbar"
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
         keepMounted
         transformOrigin={{
-          vertical: "top",
-          horizontal: "right",
+          vertical: 'top',
+          horizontal: 'right',
         }}
         open={open}
         onClose={handleClose}

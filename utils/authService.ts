@@ -1,12 +1,11 @@
-import { Credentials } from ".prisma/client";
-import crypto from "crypto";
+import crypto from 'crypto';
+
+import { Credentials } from '.prisma/client';
 
 export const getCredentialsFromPassword = function (password: string) {
-  const salt = crypto.randomBytes(16).toString("hex");
+  const salt = crypto.randomBytes(16).toString('hex');
 
-  const hash = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
-    .toString(`hex`);
+  const hash = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
 
   return {
     salt,
@@ -16,10 +15,8 @@ export const getCredentialsFromPassword = function (password: string) {
 
 export const validateUserPassword = function (
   { salt, hash }: Credentials,
-  password: string
+  password: string,
 ): boolean {
-  const hashFromInput = crypto
-    .pbkdf2Sync(password, salt, 1000, 64, `sha512`)
-    .toString(`hex`);
+  const hashFromInput = crypto.pbkdf2Sync(password, salt, 1000, 64, `sha512`).toString(`hex`);
   return hash === hashFromInput;
 };

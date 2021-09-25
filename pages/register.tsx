@@ -1,29 +1,28 @@
-import React from "react";
-import { Form } from "react-final-form";
-import { Alert, Button, Container, Grid, Typography } from "@mui/material";
-import { signIn } from "next-auth/client";
-import { NextPage } from "next";
+import React from 'react';
+import { Form } from 'react-final-form';
+import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { signIn } from 'next-auth/client';
+import { NextPage } from 'next';
 
-import { Layout } from "../components/Layout";
-import { RegisterUserDto } from "../interfaces";
-
-import { registerUsers } from "../api";
-import { FormTextField } from "../components/FormTextField";
+import { Layout } from '../components/Layout';
+import { RegisterUserDto } from '../interfaces';
+import { registerUsers } from '../api';
+import { FormTextField } from '../components/FormTextField';
 
 type FormState = RegisterUserDto;
 
 const Register: NextPage = () => {
-  const [error, setError] = React.useState<string>("");
+  const [error, setError] = React.useState<string>('');
   const [initState] = React.useState<FormState>({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
 
   const handleSubmit = async (formState: RegisterUserDto) => {
     try {
       await registerUsers(formState);
 
-      signIn("credentials", { ...formState, callbackUrl: "/" });
+      signIn('credentials', { ...formState, callbackUrl: '/' });
     } catch (e) {
       setError(String(e));
 
@@ -36,7 +35,7 @@ const Register: NextPage = () => {
       <Container maxWidth="xs">
         <Grid
           spacing={2}
-          sx={{ flexGrow: 1, justifyContent: "center" }}
+          sx={{ flexGrow: 1, justifyContent: 'center' }}
           direction="column"
           container
         >
@@ -55,8 +54,8 @@ const Register: NextPage = () => {
                 <Grid
                   component="form"
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                   noValidate
                   autoComplete="off"
@@ -83,12 +82,7 @@ const Register: NextPage = () => {
                     />
                   </Grid>
                   <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      fullWidth
-                    >
+                    <Button variant="contained" color="primary" type="submit" fullWidth>
                       Зарегистрироваться
                     </Button>
                   </Grid>

@@ -1,11 +1,11 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { RegisterUserDto } from "../../interfaces";
-import { getCredentialsFromPassword } from "../../utils/authService";
+import { NextApiRequest, NextApiResponse } from 'next';
 
-import { prismaClient } from "../../utils/prismaClient";
+import { RegisterUserDto } from '../../interfaces';
+import { getCredentialsFromPassword } from '../../utils/authService';
+import { prismaClient } from '../../utils/prismaClient';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === "POST") {
+  if (req.method === 'POST') {
     const { username, password } = JSON.parse(req.body) as RegisterUserDto;
 
     const isUserInDb = await prismaClient.user.findUnique({
@@ -13,9 +13,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (isUserInDb) {
-      return res
-        .status(409)
-        .send(`Пользователь с именем ${username} уже существует`);
+      return res.status(409).send(`Пользователь с именем ${username} уже существует`);
     }
 
     try {

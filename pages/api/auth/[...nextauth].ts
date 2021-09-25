@@ -1,8 +1,9 @@
-import NextAuth from "next-auth";
-import Providers from "next-auth/providers";
-import Adapters from "next-auth/adapters";
-import { prismaClient } from "../../../utils/prismaClient";
-import { validateUserPassword } from "../../../utils/authService";
+import NextAuth from 'next-auth';
+import Providers from 'next-auth/providers';
+import Adapters from 'next-auth/adapters';
+
+import { prismaClient } from '../../../utils/prismaClient';
+import { validateUserPassword } from '../../../utils/authService';
 
 export default NextAuth({
   session: {
@@ -10,14 +11,14 @@ export default NextAuth({
   },
   providers: [
     Providers.Credentials({
-      name: "Credentials",
+      name: 'Credentials',
       credentials: {
         username: {
-          label: "Username",
-          type: "text",
-          placeholder: "Логин пользователя",
+          label: 'Username',
+          type: 'text',
+          placeholder: 'Логин пользователя',
         },
-        password: { label: "Password", type: "password" },
+        password: { label: 'Password', type: 'password' },
       },
       authorize: async ({ password, username }, _req) => {
         const user = await prismaClient.user.findUnique({
@@ -25,11 +26,7 @@ export default NextAuth({
         });
 
         if (!user)
-          throw new Error(
-            encodeURIComponent(
-              `Пользователя в логином "${username}" не существует`
-            )
-          );
+          throw new Error(encodeURIComponent(`Пользователя в логином "${username}" не существует`));
 
         const credentials = await prismaClient.credentials.findFirst({
           where: { user },
@@ -38,8 +35,8 @@ export default NextAuth({
         if (!credentials)
           throw new Error(
             encodeURIComponent(
-              `Пользователь ${username} авторизован через стороннего провайдера. Создайте нового пользователя через форму регистрации или войдите с помощью провайдера`
-            )
+              `Пользователь ${username} авторизован через стороннего провайдера. Создайте нового пользователя через форму регистрации или войдите с помощью провайдера`,
+            ),
           );
 
         const isValidUser = validateUserPassword(credentials, password);
@@ -61,8 +58,8 @@ export default NextAuth({
   secret: process.env.SECRET,
   database: process.env.DATABASE_URL,
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: '/login',
+    error: '/login',
   },
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
 });

@@ -1,9 +1,10 @@
-import { User } from ".prisma/client";
-import { RegisterUserDto } from "../interfaces";
+import { RegisterUserDto } from '../interfaces';
+
+import { User } from '.prisma/client';
 
 export const registerUsers = (data: RegisterUserDto): Promise<User> => {
-  return fetch("/api/register", {
-    method: "POST",
+  return fetch('/api/register', {
+    method: 'POST',
     body: JSON.stringify(data),
   }).then(async (r) => {
     if (r.ok) return await r.json();

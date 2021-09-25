@@ -1,13 +1,14 @@
-import * as React from "react";
-import Head from "next/head";
-import { AppContext, AppProps as NextAppProps } from "next/app";
-import { ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import theme from "../src/theme";
-import createEmotionCache from "../utils/createEmotionCache";
-import { getSession, Provider as SessionProvider } from "next-auth/client";
-import { NOT_AUTH_ROUTES } from "../constants";
+import * as React from 'react';
+import Head from 'next/head';
+import { AppContext, AppProps as NextAppProps } from 'next/app';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { CacheProvider, EmotionCache } from '@emotion/react';
+import { getSession, Provider as SessionProvider } from 'next-auth/client';
+
+import theme from '../src/theme';
+import createEmotionCache from '../utils/createEmotionCache';
+import { NOT_AUTH_ROUTES } from '../constants';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -40,16 +41,13 @@ App.getInitialProps = async (context: AppContext) => {
     const session = await getSession({ req: context.ctx.req });
 
     // not auth redirect condition
-    if (
-      !session &&
-      !Object.values(NOT_AUTH_ROUTES).includes(context.ctx.pathname)
-    ) {
+    if (!session && !Object.values(NOT_AUTH_ROUTES).includes(context.ctx.pathname)) {
       // we are on server
       if (context.ctx.res) {
-        context.ctx.res.writeHead(302, { Location: "/login" });
+        context.ctx.res.writeHead(302, { Location: '/login' });
         context.ctx.res.end();
       } else {
-        context.router.push("/login", "/login");
+        context.router.push('/login', '/login');
       }
     }
 
@@ -63,6 +61,6 @@ App.getInitialProps = async (context: AppContext) => {
   } catch (err) {
     console.log(err);
     // TODO: тут нужно сделать страницу с ошибкой
-    context.router.push("/errorpage");
+    context.router.push('/errorpage');
   }
 };

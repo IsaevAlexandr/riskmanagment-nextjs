@@ -1,16 +1,15 @@
-import React from "react";
+import React from 'react';
+import { signIn, providers } from 'next-auth/client';
+import { NextPage, NextPageContext } from 'next';
+import { useRouter } from 'next/dist/client/router';
+import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { Form } from 'react-final-form';
+import { Box } from '@mui/system';
 
-import { signIn, providers } from "next-auth/client";
-import { NextPage, NextPageContext } from "next";
-import { useRouter } from "next/dist/client/router";
-
-import { Layout } from "../components/Layout";
-import { Await, RegisterUserDto } from "../interfaces";
-import { Alert, Button, Container, Grid, Typography } from "@mui/material";
-import { Form } from "react-final-form";
-import { FormTextField } from "../components/FormTextField";
-import { Box } from "@mui/system";
-import Link from "../src/Link";
+import { Layout } from '../components/Layout';
+import { Await, RegisterUserDto } from '../interfaces';
+import { FormTextField } from '../components/FormTextField';
+import Link from '../src/Link';
 
 interface PageProps {
   providers: Await<ReturnType<typeof providers>>;
@@ -18,26 +17,25 @@ interface PageProps {
 
 const AUTH_ERRORS: Record<string, string> = {
   OAuthAccountNotLinked:
-    "На данный момент авторизация через несколько провайдеров c одним email не поддерживается. Зайдите под тем провайдером, которым вы регистрировались",
+    'На данный момент авторизация через несколько провайдеров c одним email не поддерживается. Зайдите под тем провайдером, которым вы регистрировались',
 };
 
 type FormState = RegisterUserDto;
 
 const Login: NextPage<PageProps> = ({ providers }) => {
-  console.log("🚀 ~ file: login.tsx ~ line 37 ~ providers", providers);
+  console.log('🚀 ~ file: login.tsx ~ line 37 ~ providers', providers);
   const router = useRouter();
   const [initState] = React.useState<FormState>({
-    username: "",
-    password: "",
+    username: '',
+    password: '',
   });
 
-  const error: string =
-    typeof router.query.error === "string" ? router.query.error : "";
+  const error: string = typeof router.query.error === 'string' ? router.query.error : '';
 
   const handleSubmit = async (values: FormState) => {
     return signIn(providers!.credentials.id, {
       ...values,
-      callbackUrl: "/",
+      callbackUrl: '/',
     });
   };
 
@@ -60,8 +58,8 @@ const Login: NextPage<PageProps> = ({ providers }) => {
                 <Grid
                   component="form"
                   sx={{
-                    display: "flex",
-                    flexDirection: "column",
+                    display: 'flex',
+                    flexDirection: 'column',
                   }}
                   noValidate
                   autoComplete="off"
@@ -89,12 +87,7 @@ const Login: NextPage<PageProps> = ({ providers }) => {
                   </Grid>
 
                   <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      fullWidth
-                    >
+                    <Button variant="contained" color="primary" type="submit" fullWidth>
                       Войти в приложение
                     </Button>
                   </Grid>
