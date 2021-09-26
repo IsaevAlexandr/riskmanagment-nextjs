@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react-lite';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
@@ -22,6 +23,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 
 import { NextLinkComposed } from '../src/Link';
+import { useStores } from '../hooks';
 
 import { Logo } from './Logo';
 import { AuthUserMenu } from './AuthUserMenu';
@@ -97,23 +99,23 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export const Layout: React.FC = ({ children }) => {
+export const Layout: React.FC = observer(({ children }) => {
   const theme = useTheme();
   const [session] = useSession();
-  const [open, setOpen] = React.useState(false);
+  const { appState } = useStores();
   const router = useRouter();
   const handleDrawerOpen = () => {
-    setOpen(true);
+    appState.setMenuOpen(true);
   };
 
   const handleDrawerClose = () => {
-    setOpen(false);
+    appState.setMenuOpen(false);
   };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open} sx={{ bgcolor: '#fff' }}>
+      <AppBar position="fixed" open={appState.menuOpen} sx={{ bgcolor: '#fff' }}>
         <Toolbar>
           {session && (
             <IconButton
@@ -123,7 +125,7 @@ export const Layout: React.FC = ({ children }) => {
               edge="start"
               sx={{
                 marginRight: (t) => t.spacing(4),
-                ...(open && { display: 'none' }),
+                ...(appState.menuOpen && { display: 'none' }),
               }}
             >
               <MenuIcon />
@@ -140,7 +142,7 @@ export const Layout: React.FC = ({ children }) => {
         </Toolbar>
       </AppBar>
       {session && (
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent" open={appState.menuOpen}>
           <DrawerHeader>
             <IconButton onClick={handleDrawerClose}>
               {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
@@ -186,4 +188,4 @@ export const Layout: React.FC = ({ children }) => {
       </Box>
     </Box>
   );
-};
+});
