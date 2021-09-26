@@ -4,7 +4,6 @@ import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import { Alert, Button, Container, Grid, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
-import { Box } from '@mui/system';
 
 import { Layout } from '../components/Layout';
 import { Await, RegisterUserDto } from '../interfaces';
@@ -23,7 +22,6 @@ const AUTH_ERRORS: Record<string, string> = {
 type FormState = RegisterUserDto;
 
 const Login: NextPage<PageProps> = ({ providers }) => {
-  console.log('🚀 ~ file: login.tsx ~ line 37 ~ providers', providers);
   const router = useRouter();
   const [initState] = React.useState<FormState>({
     username: '',

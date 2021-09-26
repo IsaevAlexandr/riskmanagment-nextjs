@@ -59,6 +59,7 @@ App.getInitialProps = async (context: AppContext) => {
 
     return { pageProps: { ...pageProps, session } };
   } catch (err) {
+    // eslint-disable-next-line no-console
     console.log(err);
     // TODO: тут нужно сделать страницу с ошибкой
     context.router.push('/errorpage');
