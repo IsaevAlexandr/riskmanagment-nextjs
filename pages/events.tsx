@@ -2,8 +2,8 @@ import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
-import { Button, Grid, Link, TextField } from '@mui/material';
-import { Table, Column, Cell, CellProps } from 'fixed-data-table-2';
+import { Button, Grid, TextField } from '@mui/material';
+import { Table, Column } from 'fixed-data-table-2';
 import { useMutation, useQuery } from 'react-query';
 import { observer } from 'mobx-react-lite';
 import AddIcon from '@mui/icons-material/Add';
@@ -13,62 +13,104 @@ import { Box } from '@mui/system';
 
 import { Layout } from '../components/Layout';
 import { createEvent, getEvents } from '../api';
-import { useStores } from '../hooks';
-import { EventDto, SortTypes } from '../interfaces';
+import { useStores, useWindowResize } from '../hooks';
+import { CustomColumn, EventDto } from '../interfaces';
 import { EventModalForm } from '../components/EventModalForm';
+import { TextCell } from '../components/TextCell';
+import { SortHeaderCell } from '../components/SortHeaderCell';
+import { CELL_HEIGHT } from '../constants';
 
 import { Event } from '.prisma/client';
 
-function reverseSortDirection(sortDir: SortTypes): SortTypes {
-  return sortDir === 'DESC' ? 'ASC' : 'DESC';
-}
-
-interface SortHeaderCellProps {
-  onSortChange(c: string, t: SortTypes): void;
-  sortDir?: SortTypes;
-}
-
-const SortHeaderCell: React.FC<SortHeaderCellProps & CellProps> = ({
-  onSortChange,
-  sortDir,
-  children,
-
-  ...props
-}) => {
-  const _onSortChange = () => {
-    if (onSortChange) {
-      onSortChange(String(props.columnKey!), sortDir ? reverseSortDirection(sortDir) : 'DESC');
-    }
-  };
-
-  return (
-    <Cell {...props}>
-      <Link
-        underline="none"
-        onClick={(e) => {
-          e.preventDefault();
-          _onSortChange();
-        }}
-      >
-        {children} {sortDir ? (sortDir === 'DESC' ? '↓' : '↑') : ''}
-      </Link>
-    </Cell>
-  );
-};
-
-function TextCellBase<T>({ data, ...props }: CellProps & { data: T[] }) {
-  // @ts-ignore
-  const dataToCell = data?.[props.rowIndex!]?.[props.columnKey!];
-
-  return dataToCell ? <Cell {...props}>{dataToCell}</Cell> : null;
-}
-
-const TextCell = React.memo(TextCellBase);
+const columns: CustomColumn<Event>[] = [
+  {
+    title: 'N',
+    columnKey: 'id',
+    width: 100,
+    fixed: true,
+  },
+  {
+    title: 'Мероприятие',
+    columnKey: 'event',
+    width: 200,
+    fixed: true,
+  },
+  {
+    title: 'Описание мероприятия',
+    columnKey: 'description',
+    width: 200,
+  },
+  {
+    title: 'Адресуемый риск',
+    columnKey: 'risk',
+    width: 200,
+  },
+  {
+    title: 'N риска',
+    columnKey: 'riskNum',
+    width: 200,
+  },
+  {
+    title: 'Вероятность до',
+    columnKey: 'probabilityBefore',
+    width: 200,
+  },
+  {
+    title: 'Вероятность после',
+    columnKey: 'probabilityAfter',
+    width: 200,
+  },
+  {
+    title: 'Потери до, тыс. руб',
+    columnKey: 'lossesBefore',
+    width: 200,
+  },
+  {
+    title: 'Потери после, тыс. руб',
+    columnKey: 'lossesAfter',
+    width: 200,
+  },
+  {
+    title: 'Оценка риска до, тыс. руб',
+    columnKey: 'riskAssessmentBefore',
+    width: 200,
+  },
+  {
+    title: 'Оценка риска после, тыс. руб',
+    columnKey: 'riskAssessmentAfter',
+    width: 200,
+  },
+  {
+    title: 'Дата начала',
+    columnKey: 'startDate',
+    width: 200,
+  },
+  {
+    title: 'Дата завершения',
+    columnKey: 'endDate',
+    width: 200,
+  },
+  {
+    title: 'Стоимость мероприятия',
+    columnKey: 'totalCost',
+    width: 200,
+  },
+  {
+    title: 'Ответственный',
+    columnKey: 'responsible',
+    width: 200,
+  },
+  {
+    title: 'Статус',
+    columnKey: 'status',
+    width: 200,
+  },
+];
 
 const Events: NextPage = () => {
   const { events, eventForm } = useStores();
   const [value, setValue] = React.useState<[Date | null, Date | null]>([null, null]);
-  const ref = React.useRef<HTMLDivElement>(null);
+  const { height, width } = useWindowResize();
 
   useQuery('events', () => getEvents(), {
     onSuccess: events.setData,
@@ -114,225 +156,30 @@ const Events: NextPage = () => {
             </Button>
           </Grid>
 
-          <Grid item xs={12} ref={ref}>
+          <Grid item xs={12}>
             <Table
-              rowHeight={50}
+              rowHeight={CELL_HEIGHT}
               rowsCount={events.data.length}
-              headerHeight={50}
-              width={ref.current?.getBoundingClientRect().width ?? 1000}
-              height={Math.min(
-                events.data.length * 50,
-                typeof window !== 'undefined' ? window.innerHeight - 240 : 500,
-              )}
-              // {...this.props}
+              headerHeight={CELL_HEIGHT}
+              width={width ? Math.ceil(width / 1.6) : 1000}
+              height={height ? Math.ceil(height / 1.6) : 500}
             >
-              <Column
-                columnKey="id"
-                header={
-                  <SortHeaderCell onSortChange={events.sortByProp} sortDir={events.colSortDirs.id}>
-                    Id
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={100}
-                fixed
-              />
-              <Column
-                columnKey="event"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.event}
-                  >
-                    Мероприятие
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-                fixed
-              />
-              <Column
-                columnKey="description"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.description}
-                  >
-                    Описание мероприятия
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="risk"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.risk}
-                  >
-                    Адресуемый риск
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="riskNum"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.riskNum}
-                  >
-                    N риска
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="probabilityBefore"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.probabilityBefore}
-                  >
-                    Вероятность до
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="probabilityAfter"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.probabilityAfter}
-                  >
-                    Вероятность после
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="lossesBefore"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.lossesBefore}
-                  >
-                    Потери до, тыс. руб
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="lossesAfter"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.lossesAfter}
-                  >
-                    Потери после, тыс. руб
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="riskAssessmentBefore"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.riskAssessmentBefore}
-                  >
-                    Оценка риска до, тыс. руб
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="riskAssessmentAfter"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.riskAssessmentAfter}
-                  >
-                    Оценка риска после, тыс. руб
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="startDate"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.startDate}
-                  >
-                    Дата начала
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="endDate"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.endDate}
-                  >
-                    Дата завершения
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="totalCost"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.totalCost}
-                  >
-                    Стоимость мероприятия
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="responsible"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.responsible}
-                  >
-                    Ответственный
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
-              <Column
-                columnKey="status"
-                header={
-                  <SortHeaderCell
-                    onSortChange={events.sortByProp}
-                    sortDir={events.colSortDirs.status}
-                  >
-                    Статус
-                  </SortHeaderCell>
-                }
-                cell={<TextCell data={events.data} />}
-                width={200}
-              />
+              {columns.map(({ title, columnKey, ...props }) => (
+                <Column
+                  key={columnKey}
+                  columnKey={columnKey}
+                  header={
+                    <SortHeaderCell
+                      onSortChange={events.sortByProp}
+                      sortDir={events.colSortDirs[columnKey]}
+                    >
+                      {title}
+                    </SortHeaderCell>
+                  }
+                  cell={<TextCell data={events.data} />}
+                  {...props}
+                />
+              ))}
             </Table>
           </Grid>
         </Grid>

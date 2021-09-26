@@ -2,13 +2,11 @@ import { makeAutoObservable } from 'mobx';
 
 import { addToDevtools } from './addToDevtools';
 
-type FormState = Omit<Event, 'id'> & { id?: number };
-
-export class EventFormState {
-  initialState: FormState;
+export class FormState<T> {
+  initialState: T;
   isOpen: boolean = false;
 
-  constructor(initState?: FormState) {
+  constructor(initState?: T) {
     this.initialState = initState || this.getInitialState();
     makeAutoObservable(this);
     addToDevtools(this, {
@@ -16,15 +14,15 @@ export class EventFormState {
     });
   }
 
-  private getInitialState(): FormState {
-    return {} as FormState;
+  private getInitialState(): T {
+    return {} as T;
   }
 
   reset = () => {
     this.initialState = this.getInitialState();
   };
 
-  open = (formSt?: FormState) => {
+  open = (formSt?: T) => {
     if (formSt) {
       this.initialState = formSt;
     }

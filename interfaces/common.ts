@@ -1,3 +1,5 @@
+import { ColumnProps } from 'fixed-data-table-2';
+
 export type Await<T> = T extends {
   then(onfulfilled?: (value: infer U) => unknown): unknown;
 }
@@ -19,3 +21,8 @@ export interface Collection<T> {
 }
 
 export type SortTypes = 'ASC' | 'DESC';
+
+export interface CustomColumn<T> extends Omit<ColumnProps, 'columnKey'> {
+  title: string;
+  columnKey: keyof T;
+}

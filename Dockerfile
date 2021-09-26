@@ -16,4 +16,4 @@ COPY . /usr/src/app
 RUN npm run prisma:generate
 RUN npm run build
 
-CMD npm run prisma:deploy && npm run start:prod
+CMD npm run start:prod

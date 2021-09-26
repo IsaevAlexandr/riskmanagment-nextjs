@@ -1,4 +1,4 @@
-import { Event } from '.prisma/client';
+import { Event, Risk } from '.prisma/client';
 
 export interface RegisterUserDto {
   username: string;
@@ -6,3 +6,4 @@ export interface RegisterUserDto {
 }
 
 export type EventDto = Omit<Event, 'id'>;
+export type RiskDto = Omit<Risk, 'id'>;
