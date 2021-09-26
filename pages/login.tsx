@@ -68,20 +68,13 @@ const Login: NextPage<PageProps> = ({ providers }) => {
                   <Grid item>
                     <FormTextField
                       label="Логин пользователя"
-                      variant="standard"
                       name="username"
                       type="text"
                       fullWidth
                     />
                   </Grid>
                   <Grid item>
-                    <FormTextField
-                      name="password"
-                      label="Пароль"
-                      variant="standard"
-                      type="password"
-                      fullWidth
-                    />
+                    <FormTextField name="password" label="Пароль" type="password" fullWidth />
                   </Grid>
 
                   <Grid item>

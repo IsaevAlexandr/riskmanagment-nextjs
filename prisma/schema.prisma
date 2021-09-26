@@ -70,37 +70,37 @@ model VerificationToken {
 }
 
 model Risk {
-  id                           Int    @id @default(autoincrement())
-  name                         String
-  description                  String
-  category                     String
-  reason                       String
-  probability_before           Float
-  time_recovery_before         Float
-  costs_recovery_after         Float
-  costs_recovery_before        Float
-  measure_probability_presence String
-  probability_after            Float
-  time_recovery_after          Float
-  business_process             String
-  risk_owner                   String
+  id                           Int     @id @default(autoincrement())
+  name                         String?
+  description                  String?
+  category                     String?
+  reason                       String?
+  probability_before           Float?
+  time_recovery_before         Float?
+  costs_recovery_after         Float?
+  costs_recovery_before        Float?
+  measure_probability_presence String?
+  probability_after            Float?
+  time_recovery_after          Float?
+  business_process             String?
+  risk_owner                   String?
 }
 
 model Event {
-  id                   Int    @id @default(autoincrement())
-  event                String
-  description          String
-  risk                 String
-  riskNum              String
-  probabilityBefore    Float
-  probabilityAfter     Float
-  lossesBefore         Float
-  lossesAfter          Float
-  riskAssessmentBefore Float
-  riskAssessmentAfter  Float
-  startDate            Float
-  endDate              String
-  totalCost            String
-  responsible          String
-  status               String
+  id                   Int     @id @default(autoincrement())
+  event                String?
+  description          String?
+  risk                 String?
+  riskNum              String?
+  probabilityBefore    Float?
+  probabilityAfter     Float?
+  lossesBefore         Float?
+  lossesAfter          Float?
+  riskAssessmentBefore Float?
+  riskAssessmentAfter  Float?
+  startDate            String?
+  endDate              String?
+  totalCost            String?
+  responsible          String?
+  status               String?
 }

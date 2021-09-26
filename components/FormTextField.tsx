@@ -59,7 +59,7 @@ export function FormTextField<T = string>(props: TextFieldProps<T>) {
     <Field<T>
       name={name}
       render={({ input, meta }) => (
-        <TextFieldWrapper input={input} meta={meta} name={name} {...rest} />
+        <TextFieldWrapper variant="standard" input={input} meta={meta} name={name} {...rest} />
       )}
       {...fieldProps}
     />

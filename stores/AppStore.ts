@@ -1,4 +1,4 @@
-import { makeObservable, action, observable } from 'mobx';
+import { makeAutoObservable } from 'mobx';
 
 import { addToDevtools } from './addToDevtools';
 
@@ -6,11 +6,7 @@ export class AppState {
   menuOpen: boolean = false;
 
   constructor() {
-    makeObservable(this, {
-      menuOpen: observable,
-      setMenuOpen: action,
-      toggleMenuOpen: action,
-    });
+    makeAutoObservable(this);
 
     addToDevtools(this, {
       name: this.constructor.name,

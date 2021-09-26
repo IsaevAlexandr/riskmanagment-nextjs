@@ -64,22 +64,10 @@ const Register: NextPage = () => {
                   spacing={2}
                 >
                   <Grid item>
-                    <FormTextField
-                      label="Имя пользователя"
-                      variant="standard"
-                      name="username"
-                      type="text"
-                      fullWidth
-                    />
+                    <FormTextField label="Имя пользователя" name="username" type="text" fullWidth />
                   </Grid>
                   <Grid item>
-                    <FormTextField
-                      name="password"
-                      label="Пароль"
-                      variant="standard"
-                      type="password"
-                      fullWidth
-                    />
+                    <FormTextField name="password" label="Пароль" type="password" fullWidth />
                   </Grid>
                   <Grid item>
                     <Button variant="contained" color="primary" type="submit" fullWidth>

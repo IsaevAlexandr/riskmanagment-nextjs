@@ -12,15 +12,20 @@
     "@prisma/client": "^3.1.1",
     "clsx": "latest",
     "final-form": "^4.20.2",
+    "fixed-data-table-2": "^1.2.0",
     "mobx": "^6.3.3",
     "mobx-react-lite": "^3.2.1",
     "next": "latest",
     "next-auth": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-final-form": "^6.5.3"
+    "react-final-form": "^6.5.3",
+    "react-query": "^3.24.4",
+    "@mui/lab": "^5.0.0-alpha.47",
+    "date-fns": "^2.24.0"
   },
   "devDependencies": {
+    "@types/fixed-data-table-2": "^0.8.5",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
@@ -38,16 +43,27 @@
     "mobx-remotedev": "^0.3.6",
     "prettier": "^2.4.1",
     "prisma": "^3.1.1",
+    "ts-node": "^10.2.1",
     "typescript": "4.4.3"
   },
   "scripts": {
-    "dev": "next",
     "build": "next build",
-    "start": "next start",
+    "start": "next",
+    "start:prod": "next start -p ${PORT:-8080}",
     "prepare": "husky install && prisma generate",
+    "prisma:generate": "prisma generate",
     "prisma:studio": "prisma studio",
+    "prisma:deploy": "prisma migrate deploy",
     "es:lint": "eslint . --ext .js,.ts,.tsx --max-warnings 0",
     "ts:lint": "tsc --project ./tsconfig.json --noEmit",
-    "lint": "npm run es:lint && npm run ts:lint"
+    "lint": "npm run es:lint && npm run ts:lint",
+    "docker:build": "docker build . -t riskmanagment_v1",
+    "docker:tag": "docker tag riskmanagment_v1 registry.heroku.com/riskmanagment/web",
+    "docker:push": "docker push registry.heroku.com/riskmanagment/web",
+    "heroku:release": "heroku container:release web --app riskmanagment",
+    "release": "npm run docker:build && npm run docker:tag && npm run docker:push && npm run heroku:release"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   }
 }

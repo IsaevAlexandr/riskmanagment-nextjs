@@ -9,6 +9,9 @@ import { getSession, Provider as SessionProvider } from 'next-auth/client';
 import theme from '../src/theme';
 import createEmotionCache from '../utils/createEmotionCache';
 import { NOT_AUTH_ROUTES } from '../constants';
+import { QueryClientProvider } from '../components/QueryClientProvider';
+
+import 'fixed-data-table-2/dist/fixed-data-table.css';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -20,19 +23,21 @@ interface AppProps extends NextAppProps {
 export default function App(props: AppProps) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>My page</title>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <ThemeProvider theme={theme}>
-        {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-        <CssBaseline />
-        <SessionProvider session={props.pageProps.session}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </ThemeProvider>
-    </CacheProvider>
+    <QueryClientProvider>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>My page</title>
+          <meta name="viewport" content="initial-scale=1, width=device-width" />
+        </Head>
+        <ThemeProvider theme={theme}>
+          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+          <CssBaseline />
+          <SessionProvider session={props.pageProps.session}>
+            <Component {...pageProps} />
+          </SessionProvider>
+        </ThemeProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }
 
