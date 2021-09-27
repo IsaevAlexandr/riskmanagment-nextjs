@@ -1,4 +1,4 @@
-import { EventDto, RegisterUserDto, RiskDto } from '../interfaces';
+import { RegisterUserDto } from '../interfaces';
 
 import { User, Event, Risk } from '.prisma/client';
 
@@ -12,30 +12,23 @@ export const registerUsers = (data: RegisterUserDto): Promise<User> => {
   });
 };
 
-export const getEvents = (): Promise<Event[]> => {
-  return fetch('/api/events').then(async (r) => {
+const kindergartenResponseHandler = (p: Promise<Response>) =>
+  p.then(async (r) => {
     if (r.ok) return await r.json();
     else throw await r.text();
   });
-};
 
-export const createEvent = (data: EventDto): Promise<Event> => {
-  return fetch('/api/events', { method: 'POST', body: JSON.stringify(data) }).then(async (r) => {
-    if (r.ok) return await r.json();
-    else throw await r.text();
-  });
-};
+function makeSimpleCrudApi<T>(path: string) {
+  return {
+    get: (): Promise<T[]> => kindergartenResponseHandler(fetch(path)),
+    post: (d: T): Promise<T> =>
+      kindergartenResponseHandler(fetch(path, { method: 'POST', body: JSON.stringify(d) })),
+    put: (d: T): Promise<T> =>
+      kindergartenResponseHandler(fetch(path, { method: 'PUT', body: JSON.stringify(d) })),
+    delete: (d: T): Promise<T> =>
+      kindergartenResponseHandler(fetch(path, { method: 'DELETE', body: JSON.stringify(d) })),
+  };
+}
 
-export const getRisks = (): Promise<Risk[]> => {
-  return fetch('/api/risks').then(async (r) => {
-    if (r.ok) return await r.json();
-    else throw await r.text();
-  });
-};
-
-export const createRisk = (data: RiskDto): Promise<Risk> => {
-  return fetch('/api/risks', { method: 'POST', body: JSON.stringify(data) }).then(async (r) => {
-    if (r.ok) return await r.json();
-    else throw await r.text();
-  });
-};
+export const riskCrudApi = makeSimpleCrudApi<Risk>('/api/risks');
+export const eventCrudApi = makeSimpleCrudApi<Event>('/api/events');

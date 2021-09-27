@@ -5,6 +5,7 @@ import { AppState } from './AppStore';
 import { EventsStore } from './EventsStore';
 import { RisksStore } from './RisksStore';
 import { FormState } from './FormState';
+import { ImageModalStore } from './ImageModalStore';
 
 import { Event, Risk } from '.prisma/client';
 
@@ -12,13 +13,11 @@ const isServer = typeof window === 'undefined';
 
 enableStaticRendering(isServer);
 
-type EventFormState = Omit<Event, 'id'> & { id?: number };
-type RiskFormState = Omit<Risk, 'id'> & { id?: number };
-
 export const storesContext = createContext({
   appState: new AppState(),
   events: new EventsStore(),
   risks: new RisksStore(),
-  eventForm: new FormState<EventFormState>(),
-  riskForm: new FormState<RiskFormState>(),
+  eventForm: new FormState<Event>(),
+  riskForm: new FormState<Risk>(),
+  imageModal: new ImageModalStore(),
 });

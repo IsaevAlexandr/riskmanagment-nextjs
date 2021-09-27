@@ -6,7 +6,7 @@ import UpdateIcon from '@mui/icons-material/Update';
 import { Box } from '@mui/system';
 
 import { Layout } from '../components/Layout';
-import { ResponsibleImage } from '../components/ResponsibleImage/ResponsibleImage';
+import { ResponsiveImage } from '../components/ResponsiveImage/ResponsiveImage';
 import { useMonitoringData } from '../hooks';
 
 const Monitoring: NextPage = () => {
@@ -39,7 +39,7 @@ const Monitoring: NextPage = () => {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <ResponsibleImage src={generatedEvent.picture} alt="status image" />
+            <ResponsiveImage src={generatedEvent.picture} alt="status image" />
           </Grid>
         </Grid>
       </Container>

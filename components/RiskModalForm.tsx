@@ -17,15 +17,13 @@ import { FormTextField, parseNumberProps } from './FormTextField';
 
 import { Risk } from '.prisma/client';
 
-interface ModalFormProps {
-  onSave(v: Risk): void;
-}
+interface ModalFormProps {}
 
-export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => {
+export const RiskModalForm: React.FC<ModalFormProps> = observer(() => {
   const { riskForm } = useStores();
 
   const handleSubmit = async (form: Risk) => {
-    onSave(form);
+    riskForm.onSubmit(form);
 
     riskForm.onClose();
   };
@@ -66,7 +64,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                 </Grid>
                 <Grid item>
                   <FormTextField
-                    label="Среднее НПВ"
+                    label="Среднее НПВ, тыс. руб"
                     name="time_recovery_before"
                     fullWidth
                     {...parseNumberProps}
@@ -74,7 +72,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                 </Grid>
                 <Grid item>
                   <FormTextField
-                    label="Затраты на восстановление"
+                    label="Затраты на восстановление, тыс. руб"
                     name="costs_recovery_after"
                     fullWidth
                     {...parseNumberProps}
@@ -82,7 +80,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                 </Grid>
                 <Grid item>
                   <FormTextField
-                    label="Текущий ущерб"
+                    label="Текущий ущерб, тыс. руб"
                     name="costs_recovery_before"
                     fullWidth
                     {...parseNumberProps}
@@ -98,7 +96,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
               </Grid>
               <Grid item>
                 <FormTextField
-                  label="Вероятность после мероприятия"
+                  label="Вероятность после мероприятия (в долях)"
                   name="probability_after"
                   fullWidth
                   {...parseNumberProps}
@@ -106,7 +104,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
               </Grid>
               <Grid item>
                 <FormTextField
-                  label="Потери времени на восстановление после мероприятия"
+                  label="Потери времени на восстановление после мероприятия, часы"
                   name="time_recovery_after"
                   fullWidth
                   {...parseNumberProps}
@@ -114,7 +112,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
               </Grid>
               <Grid item>
                 <FormTextField
-                  label="Текущая вероятность"
+                  label="Текущая вероятность (в долях)"
                   name="probability_before"
                   fullWidth
                   {...parseNumberProps}

@@ -17,15 +17,13 @@ import { FormTextField, parseNumberProps } from './FormTextField';
 
 import { Event } from '.prisma/client';
 
-interface ModalFormProps {
-  onSave(v: Event): void;
-}
+interface ModalFormProps {}
 
-export const EventModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => {
+export const EventModalForm: React.FC<ModalFormProps> = observer(({}) => {
   const { eventForm } = useStores();
 
   const handleSubmit = async (form: Event) => {
-    onSave(form);
+    eventForm.onSubmit(form);
 
     eventForm.onClose();
   };
@@ -119,7 +117,11 @@ export const EventModalForm: React.FC<ModalFormProps> = observer(({ onSave }) =>
                   <FormTextField label="Дата завершения" name="endDate" fullWidth />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Стоимость мероприятия" name="totalCost" fullWidth />
+                  <FormTextField
+                    label="Стоимость мероприятия, тыс. руб"
+                    name="totalCost"
+                    fullWidth
+                  />
                 </Grid>
                 <Grid item>
                   <FormTextField label="Ответственный" name="responsible" fullWidth />

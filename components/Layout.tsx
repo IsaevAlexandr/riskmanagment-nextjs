@@ -23,6 +23,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import GridViewIcon from '@mui/icons-material/GridView';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import AlbumIcon from '@mui/icons-material/Album';
+import AccountTreeRoundedIcon from '@mui/icons-material/AccountTreeRounded';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 
@@ -31,6 +32,7 @@ import { useStores } from '../hooks';
 import { NextLinkComposed } from './NextLink';
 import { Logo } from './Logo';
 import { AuthUserMenu } from './AuthUserMenu';
+import { ImageModal } from './ImageModal';
 
 const drawerWidth = 320;
 
@@ -50,9 +52,6 @@ const closedMixin = (theme: Theme): CSSObject => ({
   }),
   overflowX: 'hidden',
   width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(9)} + 1px)`,
-  },
 });
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -200,13 +199,33 @@ export const Layout: React.FC = observer(({ children }) => {
               </ListItemIcon>
               <ListItemText primary="Планирование мероприятий" />
             </ListItemButton>
+
+            <ListItemButton
+              onClick={onMenuItemClick}
+              component={NextLinkComposed}
+              to="/tree"
+              selected={router.pathname === '/tree'}
+            >
+              <ListItemIcon>
+                <AccountTreeRoundedIcon />
+              </ListItemIcon>
+              <ListItemText primary="Дерево отказов" />
+            </ListItemButton>
           </List>
         </Drawer>
       )}
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box
+        component="main"
+        sx={{
+          flexGrow: 1,
+          p: 3,
+          width: `calc(100% - ${appState.menuOpen ? `${drawerWidth}px` : `${theme.spacing(7)}`})`,
+        }}
+      >
         <DrawerHeader />
         {children}
       </Box>
+      <ImageModal />
     </Box>
   );
 });

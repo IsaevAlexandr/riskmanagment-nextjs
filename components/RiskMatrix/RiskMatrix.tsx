@@ -28,7 +28,7 @@ const matrixColorSheme = [
   [0, 1, 1, 2, 2],
 ];
 
-const allRisks: RiskFactor[] = ['e', 'd', 'c', 'b', 'a'];
+const allRisks: RiskFactor[] = ['1', '2', '3', '4', '5'];
 const maxLevel = 5;
 
 const levels: number[] = [];

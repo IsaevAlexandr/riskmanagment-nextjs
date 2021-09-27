@@ -25,7 +25,7 @@ export default function App(props: AppProps) {
     <QueryClientProvider>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>My page</title>
+          <title>СОН - Система обеспечения непрерывности</title>
           <meta name="viewport" content="initial-scale=1, width=device-width" />
         </Head>
         <ThemeProvider theme={Theme}>

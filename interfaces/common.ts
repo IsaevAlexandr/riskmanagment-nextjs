@@ -8,16 +8,6 @@ export interface Comparator<T> {
   (v1: T, v2: T): 1 | -1 | 0;
 }
 
-export interface Collection<T> {
-  byId: Record<string, T>;
-  defaultIds: string[];
-  ids: string[];
-  data: T[];
-  deleteById(id: string): void;
-  setData(p: T[]): void;
-  reset(): void;
-}
-
 export type SortTypes = 'ASC' | 'DESC';
 
-export type RiskFactor = 'a' | 'b' | 'c' | 'd' | 'e';
+export type RiskFactor = '1' | '2' | '3' | '4' | '5';

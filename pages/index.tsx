@@ -1,17 +1,18 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
+import { Container, Typography, IconButton, Stack } from '@mui/material';
 import { NextPage } from 'next';
-import { Breadcrumbs, Button, Grid, Paper } from '@mui/material';
+import { Breadcrumbs, Button, Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-query';
-import { Column } from 'react-table';
+import { CellProps, Column } from 'react-table';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded';
 
 import { Layout } from '../components/Layout';
 import { useStores } from '../hooks';
-import { RiskDto } from '../interfaces';
-import { createRisk, getRisks } from '../api';
+import { riskCrudApi } from '../api';
 import { RiskModalForm } from '../components/RiskModalForm';
 import { RiskMatrix } from '../components/RiskMatrix/RiskMatrix';
 import { calculateCoordsForMatrix } from '../utils/calculateCoordsForMatrix';
@@ -19,23 +20,56 @@ import { Table } from '../components/Table';
 
 import { Risk } from '.prisma/client';
 
-export const getColumns = (): Column<Risk>[] => {
+export const getColumns = ({
+  onUpdate,
+  onDelete,
+  onDescClick,
+}: {
+  onUpdate(r: Risk): void;
+  onDelete(r: Risk): void;
+  onDescClick(r: Risk): void;
+}): Column<Risk>[] => {
   return [
     { Header: 'N', accessor: (x) => x.id, width: 50 },
+    {
+      Header: '',
+      id: 'controls',
+      accessor: (x) => x,
+      Cell({ value }: CellProps<Risk, Risk>) {
+        return (
+          <Stack spacing={2} direction="row">
+            <IconButton onClick={() => onUpdate(value)}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => onDelete(value)}>
+              <DeleteIcon />
+            </IconButton>
+          </Stack>
+        );
+      },
+    },
     { Header: 'Название', accessor: (x) => x.name },
     {
       Header: 'Описание',
-      accessor: (x) => x.description,
+      id: 'description',
+      accessor: (x) => x,
+      Cell({ value }: CellProps<Risk, Risk>) {
+        return value.description ? (
+          <IconButton onClick={() => onDescClick(value)}>
+            <InsertPhotoRoundedIcon />
+          </IconButton>
+        ) : null;
+      },
     },
     { Header: 'Категория', accessor: (x) => x.category },
     { Header: 'Ключевой фактор', accessor: (x) => x.reason },
     { Header: 'Вероятность (текущая)', accessor: (x) => x.probability_before },
-    { Header: 'Среднее НПВ', accessor: (x) => x.time_recovery_before },
+    { Header: 'Среднее НПВ, тыс. руб', accessor: (x) => x.time_recovery_before },
     {
-      Header: 'Затраты на восстановление',
+      Header: 'Затраты на восстановление, тыс. руб',
       accessor: (x) => x.costs_recovery_after,
     },
-    { Header: 'Текущий ущерб', accessor: (x) => x.costs_recovery_before },
+    { Header: 'Текущий ущерб, тыс. руб', accessor: (x) => x.costs_recovery_before },
     { Header: 'Мероприятие', accessor: (x) => x.measure_probability_presence },
     {
       Header: 'Вероятность после мероприятия',
@@ -43,7 +77,7 @@ export const getColumns = (): Column<Risk>[] => {
       width: 200,
     },
     {
-      Header: 'Время на восстановление после мероприятия',
+      Header: 'Время на восстановление после мероприятия, часы',
       accessor: (x) => x.time_recovery_after,
       width: 240,
     },
@@ -53,36 +87,49 @@ export const getColumns = (): Column<Risk>[] => {
 };
 
 const Index: NextPage = () => {
-  const { risks, riskForm } = useStores();
-  useQuery('risks', () => getRisks(), { onSuccess: risks.setData });
-  const { mutate } = useMutation((d: RiskDto) => createRisk(d), {
+  const { risks, riskForm, imageModal } = useStores();
+  useQuery('risks', () => riskCrudApi.get(), { onSuccess: risks.setData });
+  const createMutation = useMutation((d: Risk) => riskCrudApi.post(d), {
     onSuccess: risks.addData,
   });
-
-  const handleSave = (formState: Risk) => {
-    mutate(formState);
-  };
-
-  const columns = React.useMemo(() => getColumns(), []);
+  const updateMutation = useMutation((d: Risk) => riskCrudApi.put(d), {
+    onSuccess: (r) => risks.updateItem(r),
+  });
+  const deleteMutation = useMutation((d: Risk) => riskCrudApi.delete(d), {
+    onSuccess: (r) => risks.deleteItem(r),
+  });
+  const columns = React.useMemo(
+    () =>
+      getColumns({
+        onUpdate: (r) => riskForm.open({ formSt: r, onSubmit: updateMutation.mutate }),
+        onDelete: (r) => deleteMutation.mutate(r),
+        onDescClick: (r) =>
+          imageModal.setOpen({ imageSrc: r.description || '', title: 'Описание риска' }),
+      }),
+    [deleteMutation, imageModal, riskForm, updateMutation.mutate],
+  );
 
   return (
     <Layout>
-      <Container>
+      <Container maxWidth="xl">
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Breadcrumbs separator="›" aria-label="breadcrumb">
-              <Typography variant="h5">Риски</Typography>
+              <Typography variant="h5">Управление рисками</Typography>
             </Breadcrumbs>
           </Grid>
 
-          <Grid item>
-            <Button variant="contained" onClick={() => riskForm.open()}>
+          <Grid item xs={12}>
+            <Button
+              variant="contained"
+              onClick={() => riskForm.open({ onSubmit: createMutation.mutate })}
+            >
               <AddIcon />
-              Управление рисками
+              Добавить риск
             </Button>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item>
             <RiskMatrix
               cellWidth={60}
               data={risks.data.map((risk) => {
@@ -97,13 +144,11 @@ const Index: NextPage = () => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Paper elevation={4} sx={{ overflow: 'hidden' }}>
-              <Table<Risk> columns={columns} data={risks.data} />
-            </Paper>
+            <Table<Risk> columns={columns} data={risks.data} />
           </Grid>
         </Grid>
 
-        <RiskModalForm onSave={handleSave} />
+        <RiskModalForm />
       </Container>
     </Layout>
   );

@@ -1,22 +1,21 @@
 import { action, computed, makeObservable, observable } from 'mobx';
 
-import { Collection, Comparator, SortTypes } from '../interfaces';
+import { Comparator, SortTypes } from '../interfaces';
 
-// TODO: зачем тут интерфейс коллекции?
-export class CollectionStore<T> implements Collection<T> {
+export class CollectionStore<T> {
   byId: Record<string, T> = {};
   ids: string[] = [];
-  defaultIds: string[] = [];
+
   colSortDirs: Partial<Record<keyof T, SortTypes>> = {};
 
-  constructor(private accessor: (p: T) => string) {
+  constructor(private readonly accessor: (p: T) => string) {
     makeObservable(this, {
       byId: observable,
-      defaultIds: observable,
       ids: observable,
       colSortDirs: observable,
       data: computed,
-      deleteById: action,
+      deleteItem: action,
+      updateItem: action,
       reset: action,
       setData: action,
       sortByProp: action,
@@ -30,15 +29,30 @@ export class CollectionStore<T> implements Collection<T> {
     return result;
   }
 
-  deleteById = (itemId: string) => {
+  deleteItem = (item: T) => {
+    const itemId = this.accessor(item);
+
     delete this.byId[itemId];
     this.ids = this.ids.filter((id) => id !== itemId);
   };
 
+  updateItem(item: T) {
+    const itemId = this.accessor(item);
+
+    if (itemId in this.byId) {
+      this.byId = {
+        ...this.byId,
+        [itemId]: {
+          ...this.byId[itemId],
+          ...item,
+        },
+      };
+    }
+  }
+
   reset = () => {
     this.byId = {};
     this.ids = [];
-    this.defaultIds = [];
   };
 
   setData = (data: T[]) => {
@@ -54,7 +68,6 @@ export class CollectionStore<T> implements Collection<T> {
 
     this.byId[key] = item;
     this.ids.push(key);
-    this.defaultIds.push(key);
   };
 
   addData = (data: T | T[]) => {
@@ -68,7 +81,7 @@ export class CollectionStore<T> implements Collection<T> {
   };
 
   private sort = (comparator: Comparator<T>) => {
-    this.ids = this.defaultIds.sort((a, b) => comparator(this.byId[a], this.byId[b]));
+    this.ids = this.ids.sort((a, b) => comparator(this.byId[a], this.byId[b]));
   };
 
   sortByProp = (propName: keyof T, sortDir: SortTypes) => {
