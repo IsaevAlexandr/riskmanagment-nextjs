@@ -13,7 +13,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useStores } from '../hooks';
 
-import { FormTextField } from './FormTextField';
+import { FormTextField, parseNumberProps } from './FormTextField';
 
 import { Risk } from '.prisma/client';
 
@@ -65,17 +65,28 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                   <FormTextField label="Ключевой фактор" name="reason" fullWidth />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Среднее НПВ" name="time_recovery_before" fullWidth />
+                  <FormTextField
+                    label="Среднее НПВ"
+                    name="time_recovery_before"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
                   <FormTextField
                     label="Затраты на восстановление"
                     name="costs_recovery_after"
                     fullWidth
+                    {...parseNumberProps}
                   />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Текущий ущерб" name="costs_recovery_before" fullWidth />
+                  <FormTextField
+                    label="Текущий ущерб"
+                    name="costs_recovery_before"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
                   <FormTextField
@@ -90,6 +101,7 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                   label="Вероятность после мероприятия"
                   name="probability_after"
                   fullWidth
+                  {...parseNumberProps}
                 />
               </Grid>
               <Grid item>
@@ -97,10 +109,16 @@ export const RiskModalForm: React.FC<ModalFormProps> = observer(({ onSave }) => 
                   label="Потери времени на восстановление после мероприятия"
                   name="time_recovery_after"
                   fullWidth
+                  {...parseNumberProps}
                 />
               </Grid>
               <Grid item>
-                <FormTextField label="Текущая вероятность" name="probability_before" fullWidth />
+                <FormTextField
+                  label="Текущая вероятность"
+                  name="probability_before"
+                  fullWidth
+                  {...parseNumberProps}
+                />
               </Grid>
               <Grid item>
                 <FormTextField label="Бизнес-процесс" name="business_process" fullWidth />

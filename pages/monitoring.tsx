@@ -25,7 +25,7 @@ const Monitoring: NextPage = () => {
           <Grid item>
             <Button variant="contained" onClick={updateData}>
               <UpdateIcon sx={{ mr: 1 }} />
-              Обновить данные принудительно
+              Обновить данные
             </Button>
           </Grid>
           <Grid item sx={{ ml: 'auto' }}>

@@ -52,6 +52,13 @@ export function TextFieldWrapper(props: TextWrapperProps) {
   );
 }
 
+export const parseNumberProps = {
+  type: 'number',
+  fieldProps: {
+    parse: Number,
+  },
+};
+
 export function FormTextField<T = string>(props: TextFieldProps<T>) {
   const { name, fieldProps, ...rest } = props;
 

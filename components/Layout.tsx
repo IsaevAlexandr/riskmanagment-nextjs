@@ -26,9 +26,9 @@ import AlbumIcon from '@mui/icons-material/Album';
 import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 
-import { NextLinkComposed } from '../src/Link';
 import { useStores } from '../hooks';
 
+import { NextLinkComposed } from './NextLink';
 import { Logo } from './Logo';
 import { AuthUserMenu } from './AuthUserMenu';
 
@@ -116,6 +116,12 @@ export const Layout: React.FC = observer(({ children }) => {
     appState.setMenuOpen(false);
   };
 
+  const onMenuItemClick = () => {
+    if (isSmallScreen) {
+      appState.setMenuOpen(false);
+    }
+  };
+
   const isSmallScreen = useMediaQuery('(max-width:500px)');
 
   return (
@@ -158,7 +164,12 @@ export const Layout: React.FC = observer(({ children }) => {
           </DrawerHeader>
           <Divider />
           <List>
-            <ListItemButton component={NextLinkComposed} to="/" selected={router.pathname === '/'}>
+            <ListItemButton
+              component={NextLinkComposed}
+              to="/"
+              selected={router.pathname === '/'}
+              onClick={onMenuItemClick}
+            >
               <ListItemIcon>
                 <GridViewIcon />
               </ListItemIcon>
@@ -167,6 +178,7 @@ export const Layout: React.FC = observer(({ children }) => {
             </ListItemButton>
 
             <ListItemButton
+              onClick={onMenuItemClick}
               component={NextLinkComposed}
               to="/monitoring"
               selected={router.pathname === '/monitoring'}
@@ -178,6 +190,7 @@ export const Layout: React.FC = observer(({ children }) => {
             </ListItemButton>
 
             <ListItemButton
+              onClick={onMenuItemClick}
               component={NextLinkComposed}
               to="/events"
               selected={router.pathname === '/events'}

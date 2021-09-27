@@ -13,7 +13,7 @@ import { observer } from 'mobx-react-lite';
 
 import { useStores } from '../hooks';
 
-import { FormTextField } from './FormTextField';
+import { FormTextField, parseNumberProps } from './FormTextField';
 
 import { Event } from '.prisma/client';
 
@@ -65,22 +65,43 @@ export const EventModalForm: React.FC<ModalFormProps> = observer(({ onSave }) =>
                   <FormTextField label="N риска" name="riskNum" fullWidth />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Вероятность до" name="probabilityBefore" fullWidth />
+                  <FormTextField
+                    label="Вероятность до"
+                    name="probabilityBefore"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Вероятность после" name="probabilityAfter" fullWidth />
+                  <FormTextField
+                    label="Вероятность после"
+                    name="probabilityAfter"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Потери до, тыс. руб" name="lossesBefore" fullWidth />
+                  <FormTextField
+                    label="Потери до, тыс. руб"
+                    name="lossesBefore"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
-                  <FormTextField label="Потери после, тыс. руб" name="lossesAfter" fullWidth />
+                  <FormTextField
+                    label="Потери после, тыс. руб"
+                    name="lossesAfter"
+                    fullWidth
+                    {...parseNumberProps}
+                  />
                 </Grid>
                 <Grid item>
                   <FormTextField
                     label="Оценка риска до, тыс. руб"
                     name="riskAssessmentBefore"
                     fullWidth
+                    {...parseNumberProps}
                   />
                 </Grid>
                 <Grid item>
@@ -88,6 +109,7 @@ export const EventModalForm: React.FC<ModalFormProps> = observer(({ onSave }) =>
                     label="Оценка риска после, тыс. руб"
                     name="riskAssessmentAfter"
                     fullWidth
+                    {...parseNumberProps}
                   />
                 </Grid>
                 <Grid item>

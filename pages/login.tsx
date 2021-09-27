@@ -8,7 +8,7 @@ import { Form } from 'react-final-form';
 import { Layout } from '../components/Layout';
 import { Await, RegisterUserDto } from '../interfaces';
 import { FormTextField } from '../components/FormTextField';
-import Link from '../src/Link';
+import Link from '../components/NextLink';
 
 interface PageProps {
   providers: Await<ReturnType<typeof providers>>;

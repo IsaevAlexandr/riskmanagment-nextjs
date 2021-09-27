@@ -3,114 +3,68 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
 import { Breadcrumbs, Button, Grid, TextField } from '@mui/material';
-import { Table, Column } from 'fixed-data-table-2';
 import { useMutation, useQuery } from 'react-query';
 import { observer } from 'mobx-react-lite';
 import AddIcon from '@mui/icons-material/Add';
 import { DateRangePicker, LocalizationProvider } from '@mui/lab';
 import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import { Box } from '@mui/system';
+import { Column } from 'react-table';
 
 import { Layout } from '../components/Layout';
 import { createEvent, getEvents } from '../api';
-import { useStores, useWindowResize } from '../hooks';
-import { CustomColumn, EventDto } from '../interfaces';
+import { useStores } from '../hooks';
+import { EventDto } from '../interfaces';
 import { EventModalForm } from '../components/EventModalForm';
-import { TextCell } from '../components/TextCell';
-import { SortHeaderCell } from '../components/SortHeaderCell';
-import { CELL_HEIGHT } from '../constants';
+import { Table } from '../components/Table';
 
 import { Event } from '.prisma/client';
 
-const columns: CustomColumn<Event>[] = [
-  {
-    title: 'N',
-    columnKey: 'id',
-    width: 100,
-    fixed: true,
-  },
-  {
-    title: 'Мероприятие',
-    columnKey: 'event',
-    width: 200,
-    fixed: true,
-  },
-  {
-    title: 'Описание мероприятия',
-    columnKey: 'description',
-    width: 200,
-  },
-  {
-    title: 'Адресуемый риск',
-    columnKey: 'risk',
-    width: 200,
-  },
-  {
-    title: 'N риска',
-    columnKey: 'riskNum',
-    width: 200,
-  },
-  {
-    title: 'Вероятность до',
-    columnKey: 'probabilityBefore',
-    width: 200,
-  },
-  {
-    title: 'Вероятность после',
-    columnKey: 'probabilityAfter',
-    width: 200,
-  },
-  {
-    title: 'Потери до, тыс. руб',
-    columnKey: 'lossesBefore',
-    width: 200,
-  },
-  {
-    title: 'Потери после, тыс. руб',
-    columnKey: 'lossesAfter',
-    width: 200,
-  },
-  {
-    title: 'Оценка риска до, тыс. руб',
-    columnKey: 'riskAssessmentBefore',
-    width: 200,
-  },
-  {
-    title: 'Оценка риска после, тыс. руб',
-    columnKey: 'riskAssessmentAfter',
-    width: 200,
-  },
-  {
-    title: 'Дата начала',
-    columnKey: 'startDate',
-    width: 200,
-  },
-  {
-    title: 'Дата завершения',
-    columnKey: 'endDate',
-    width: 200,
-  },
-  {
-    title: 'Стоимость мероприятия',
-    columnKey: 'totalCost',
-    width: 200,
-  },
-  {
-    title: 'Ответственный',
-    columnKey: 'responsible',
-    width: 200,
-  },
-  {
-    title: 'Статус',
-    columnKey: 'status',
-    width: 200,
-  },
-];
+const getColumns = (): Column<Event>[] => {
+  return [
+    { Header: 'N', accessor: (x) => x.id, width: 50 },
+    { Header: 'Мероприятие', accessor: (x) => x.event },
+    {
+      Header: 'Описание мероприятия',
+      accessor: (x) => x.description,
+      width: 200,
+    },
+    { Header: 'Адресуемый риск', accessor: (x) => x.risk },
+    { Header: 'N риска', accessor: (x) => x.riskNum },
+    { Header: 'Вероятность до', accessor: (x) => x.probabilityBefore },
+    { Header: 'Вероятность после', accessor: (x) => x.probabilityAfter },
+    {
+      Header: 'Потери до, тыс. руб',
+      accessor: (x) => x.lossesBefore,
+      width: 200,
+    },
+    {
+      Header: 'Потери после, тыс. руб',
+      accessor: (x) => x.lossesAfter,
+      width: 200,
+    },
+    {
+      Header: 'Оценка риска до, тыс. руб',
+      accessor: (x) => x.riskAssessmentBefore,
+      width: 200,
+    },
+    {
+      Header: 'Оценка риска после, тыс. руб',
+      accessor: (x) => x.riskAssessmentAfter,
+      width: 200,
+    },
+    { Header: 'Дата начала', accessor: (x) => x.startDate },
+    { Header: 'Дата завершения', accessor: (x) => x.endDate },
+    { Header: 'Стоимость мероприятия', accessor: (x) => x.totalCost },
+    { Header: 'Ответственный', accessor: (x) => x.responsible },
+    { Header: 'Статус', accessor: (x) => x.status },
+  ];
+};
 
 const Events: NextPage = () => {
   const { events, eventForm } = useStores();
   const [value, setValue] = React.useState<[Date | null, Date | null]>([null, null]);
-  const { height, width } = useWindowResize();
+  const columns = React.useMemo(() => getColumns(), []);
 
   useQuery('events', () => getEvents(), {
     onSuccess: events.setData,
@@ -159,30 +113,7 @@ const Events: NextPage = () => {
           </Grid>
 
           <Grid item xs={12}>
-            <Table
-              rowHeight={CELL_HEIGHT}
-              rowsCount={events.data.length}
-              headerHeight={CELL_HEIGHT}
-              width={width ? Math.ceil(width / 1.6) : 1000}
-              height={height ? Math.ceil(height / 1.6) : 500}
-            >
-              {columns.map(({ title, columnKey, ...props }) => (
-                <Column
-                  key={columnKey}
-                  columnKey={columnKey}
-                  header={
-                    <SortHeaderCell
-                      onSortChange={events.sortByProp}
-                      sortDir={events.colSortDirs[columnKey]}
-                    >
-                      {title}
-                    </SortHeaderCell>
-                  }
-                  cell={<TextCell data={events.data} />}
-                  {...props}
-                />
-              ))}
-            </Table>
+            <Table<Event> columns={columns} data={events.data} />
           </Grid>
         </Grid>
 
