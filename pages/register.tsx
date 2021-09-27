@@ -1,6 +1,6 @@
 import React from 'react';
 import { Form } from 'react-final-form';
-import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { Alert, Breadcrumbs, Button, Container, Grid, Typography } from '@mui/material';
 import { signIn } from 'next-auth/client';
 import { NextPage } from 'next';
 
@@ -40,7 +40,9 @@ const Register: NextPage = () => {
           container
         >
           <Grid item>
-            <Typography variant="h4">Регистрация</Typography>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Typography variant="h5">Регистрация</Typography>
+            </Breadcrumbs>
           </Grid>
           {error ? (
             <Grid item>

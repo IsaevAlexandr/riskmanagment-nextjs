@@ -2,7 +2,7 @@ import * as React from 'react';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
-import { Button, Grid, TextField } from '@mui/material';
+import { Breadcrumbs, Button, Grid, TextField } from '@mui/material';
 import { Table, Column } from 'fixed-data-table-2';
 import { useMutation, useQuery } from 'react-query';
 import { observer } from 'mobx-react-lite';
@@ -125,10 +125,12 @@ const Events: NextPage = () => {
 
   return (
     <Layout>
-      <Container maxWidth="xl">
+      <Container>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4">Мероприятия</Typography>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Typography variant="h5">Мероприятия</Typography>
+            </Breadcrumbs>
           </Grid>
           <Grid item sx={{ mr: 'auto' }}>
             <LocalizationProvider dateAdapter={AdapterDateFns}>

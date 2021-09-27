@@ -2,7 +2,7 @@ import React from 'react';
 import { signIn, providers } from 'next-auth/client';
 import { NextPage, NextPageContext } from 'next';
 import { useRouter } from 'next/dist/client/router';
-import { Alert, Button, Container, Grid, Typography } from '@mui/material';
+import { Alert, Breadcrumbs, Button, Container, Grid, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
 
 import { Layout } from '../components/Layout';
@@ -42,7 +42,9 @@ const Login: NextPage<PageProps> = ({ providers }) => {
       <Container maxWidth="xs">
         <Grid spacing={2} sx={{ flexGrow: 1 }} direction="column" container>
           <Grid item>
-            <Typography variant="h4">Войти в приложение</Typography>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Typography variant="h5">Войти в приложение</Typography>
+            </Breadcrumbs>
           </Grid>
           {router.query.error && (
             <Grid item>

@@ -3,7 +3,7 @@ import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
 import { Column, Table } from 'fixed-data-table-2';
-import { Button, Grid } from '@mui/material';
+import { Breadcrumbs, Button, Grid } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-query';
@@ -111,10 +111,12 @@ const Index: NextPage = () => {
   };
   return (
     <Layout>
-      <Container maxWidth="xl">
+      <Container>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4">Риски</Typography>
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+              <Typography variant="h5">Риски</Typography>
+            </Breadcrumbs>
           </Grid>
 
           <Grid item>

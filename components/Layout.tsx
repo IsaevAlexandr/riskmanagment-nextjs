@@ -1,21 +1,25 @@
 import React from 'react';
 import { observer } from 'mobx-react-lite';
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
-import Box from '@mui/material/Box';
-import MuiDrawer from '@mui/material/Drawer';
-import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import CssBaseline from '@mui/material/CssBaseline';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
+import {
+  CssBaseline,
+  Typography,
+  Divider,
+  IconButton,
+  ListItemIcon,
+  ListItemText,
+  ListItemButton,
+  useMediaQuery,
+  List,
+  Toolbar,
+  AppBar as MuiAppBar,
+  AppBarProps as MuiAppBarProps,
+  Drawer as MuiDrawer,
+  Box,
+} from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import { ListItemButton } from '@mui/material';
 import GridViewIcon from '@mui/icons-material/GridView';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import AlbumIcon from '@mui/icons-material/Album';
@@ -112,6 +116,8 @@ export const Layout: React.FC = observer(({ children }) => {
     appState.setMenuOpen(false);
   };
 
+  const isSmallScreen = useMediaQuery('(max-width:500px)');
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -134,9 +140,11 @@ export const Layout: React.FC = observer(({ children }) => {
 
           <Logo />
 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml: 4 }} color="primary">
-            СОН - Cистема обеспечения непрерывности
-          </Typography>
+          {!isSmallScreen ? (
+            <Typography variant="h6" component="div" sx={{ ml: 4 }} color="primary">
+              СОН - Cистема обеспечения непрерывности
+            </Typography>
+          ) : null}
 
           {session && <AuthUserMenu username={session.user?.name} />}
         </Toolbar>

@@ -22,7 +22,7 @@ export const AuthUserMenu: React.FC<AuthUserMenuProps> = ({ username }) => {
 
   return (
     <>
-      <Button color="primary" aria-haspopup="true" onClick={handleMenu}>
+      <Button color="primary" aria-haspopup="true" onClick={handleMenu} sx={{ ml: 'auto' }}>
         <AccountCircle sx={{ mr: 1 }} />
         {username}
       </Button>
