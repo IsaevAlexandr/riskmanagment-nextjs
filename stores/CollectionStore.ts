@@ -8,6 +8,7 @@ export class CollectionStore<T> {
 
   colSortDirs: Partial<Record<keyof T, SortTypes>> = {};
 
+  // accessor - how to make key for collection
   constructor(private readonly accessor: (p: T) => string) {
     makeObservable(this, {
       byId: observable,

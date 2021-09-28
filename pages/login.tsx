@@ -5,10 +5,8 @@ import { useRouter } from 'next/dist/client/router';
 import { Alert, Breadcrumbs, Button, Container, Grid, Typography } from '@mui/material';
 import { Form } from 'react-final-form';
 
-import { Layout } from '../components/Layout';
+import { Layout, FormTextField, Link } from '../components';
 import { Await, RegisterUserDto } from '../interfaces';
-import { FormTextField } from '../components/FormTextField';
-import Link from '../components/NextLink';
 
 interface PageProps {
   providers: Await<ReturnType<typeof providers>>;

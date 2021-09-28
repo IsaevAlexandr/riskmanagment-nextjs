@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 
-import { RiskDto } from '../../interfaces';
-import { prismaClient } from '../../utils/prismaClient';
+import { prismaClient } from '../../prisma/prismaClient';
 
 import { Risk } from '.prisma/client';
 
@@ -19,7 +18,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         res.status(200).json(events);
       } else if (req.method === 'POST') {
-        const payload = JSON.parse(req.body) as RiskDto;
+        const payload = JSON.parse(req.body) as Risk;
 
         const createdRisk = await prismaClient.risk.create({ data: payload });
         res.status(201).json(createdRisk);

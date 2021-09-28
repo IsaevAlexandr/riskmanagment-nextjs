@@ -2,8 +2,8 @@ import NextAuth from 'next-auth';
 import Providers from 'next-auth/providers';
 import Adapters from 'next-auth/adapters';
 
-import { prismaClient } from '../../../utils/prismaClient';
-import { validateUserPassword } from '../../../utils/authService';
+import { prismaClient } from '../../../prisma/prismaClient';
+import { validateUserPassword } from '../../../utils';
 
 export default NextAuth({
   session: {

@@ -1,10 +1,7 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { Breadcrumbs, Grid } from '@mui/material';
+import { Breadcrumbs, Grid, Typography, Container } from '@mui/material';
 import { NextPage } from 'next';
 
-import { Layout } from '../components/Layout';
-import { ResponsiveImage } from '../components/ResponsiveImage';
+import { Layout, ResponsiveImage } from '../components';
 
 const TreePage: NextPage = () => {
   return (

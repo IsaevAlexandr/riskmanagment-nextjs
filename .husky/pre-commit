@@ -1,2 +1,1 @@
-git add -A .
 npm run lint

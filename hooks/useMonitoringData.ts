@@ -1,23 +1,24 @@
 import React from 'react';
 
-import { eventGenerator } from '../utils/eventGenerator';
+import { eventGenerator } from '../utils';
 
-export const useMonitoringData = () => {
+export const useMonitoringData = (timeout = 5000) => {
   const [generatedEvent, setState] = React.useState(eventGenerator());
   const timerRef = React.useRef<NodeJS.Timer | null>(null);
 
   const updateData = React.useCallback(() => {
     if (timerRef.current) {
-      clearInterval(timerRef.current);
+      clearTimeout(timerRef.current);
     }
 
     setState(eventGenerator());
 
-    timerRef.current = setTimeout(updateData, 5000);
-  }, []);
+    timerRef.current = setTimeout(updateData, timeout);
+  }, [timeout]);
 
   React.useEffect(() => {
     updateData();
+
     return () => {
       if (timerRef.current) {
         clearTimeout(timerRef.current);

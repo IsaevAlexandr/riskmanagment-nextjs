@@ -4,10 +4,9 @@ import { Alert, Breadcrumbs, Button, Container, Grid, Typography } from '@mui/ma
 import { signIn } from 'next-auth/client';
 import { NextPage } from 'next';
 
-import { Layout } from '../components/Layout';
+import { Layout, FormTextField } from '../components';
 import { RegisterUserDto } from '../interfaces';
 import { registerUsers } from '../api';
-import { FormTextField } from '../components/FormTextField';
 
 type FormState = RegisterUserDto;
 

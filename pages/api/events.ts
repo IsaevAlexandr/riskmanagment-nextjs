@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getSession } from 'next-auth/client';
 
-import { EventDto } from '../../interfaces';
-import { prismaClient } from '../../utils/prismaClient';
+import { prismaClient } from '../../prisma/prismaClient';
 
 import { Event } from '.prisma/client';
 
@@ -23,7 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
           break;
         case 'POST':
           {
-            const payload = JSON.parse(req.body) as EventDto;
+            const payload = JSON.parse(req.body) as Event;
 
             const createdEvent = await prismaClient.event.create({ data: payload });
 

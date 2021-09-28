@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-has-content */
-import * as React from 'react';
+import React from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import NextLink, { LinkProps as NextLinkProps } from 'next/link';
@@ -45,7 +45,7 @@ export type LinkProps = {
 
 // A styled version of the Next.js Link component:
 // https://nextjs.org/docs/#with-link
-const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
+export const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props, ref) {
   const {
     activeClassName = 'active',
     as: linkAs,
@@ -88,5 +88,3 @@ const Link = React.forwardRef<HTMLAnchorElement, LinkProps>(function Link(props,
     />
   );
 });
-
-export default Link;

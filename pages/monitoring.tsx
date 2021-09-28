@@ -1,12 +1,9 @@
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import { Alert, Breadcrumbs, Button, Grid } from '@mui/material';
+import { Container, Typography, Alert, Breadcrumbs, Button, Grid } from '@mui/material';
 import { NextPage } from 'next';
 import UpdateIcon from '@mui/icons-material/Update';
 import { Box } from '@mui/system';
 
-import { Layout } from '../components/Layout';
-import { ResponsiveImage } from '../components/ResponsiveImage/ResponsiveImage';
+import { Layout, ResponsiveImage } from '../components';
 import { useMonitoringData } from '../hooks';
 
 const Monitoring: NextPage = () => {

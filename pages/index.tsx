@@ -1,34 +1,32 @@
 import * as React from 'react';
-import { Container, Typography, IconButton, Stack } from '@mui/material';
 import { NextPage } from 'next';
-import { Breadcrumbs, Button, Grid } from '@mui/material';
-import { observer } from 'mobx-react-lite';
-import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-query';
 import { CellProps, Column } from 'react-table';
+import { observer } from 'mobx-react-lite';
+import { Container, Typography, IconButton, Stack, Breadcrumbs, Button, Grid } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded';
 
-import { Layout } from '../components/Layout';
+import { Layout, RiskModalForm, RiskMatrix, Table } from '../components';
 import { useStores } from '../hooks';
 import { riskCrudApi } from '../api';
-import { RiskModalForm } from '../components/RiskModalForm';
-import { RiskMatrix } from '../components/RiskMatrix/RiskMatrix';
-import { calculateCoordsForMatrix } from '../utils/calculateCoordsForMatrix';
-import { Table } from '../components/Table';
+import { calculateCoordsForMatrix } from '../utils';
 
 import { Risk } from '.prisma/client';
 
-export const getColumns = ({
-  onUpdate,
-  onDelete,
-  onDescClick,
-}: {
+interface GetRiskColumns {
   onUpdate(r: Risk): void;
   onDelete(r: Risk): void;
   onDescClick(r: Risk): void;
-}): Column<Risk>[] => {
+}
+
+export const getRiskColumns = ({
+  onUpdate,
+  onDelete,
+  onDescClick,
+}: GetRiskColumns): Column<Risk>[] => {
   return [
     { Header: 'N', accessor: (x) => x.id, width: 50 },
     {
@@ -54,11 +52,13 @@ export const getColumns = ({
       id: 'description',
       accessor: (x) => x,
       Cell({ value }: CellProps<Risk, Risk>) {
-        return value.description ? (
+        return value.description?.startsWith('/') ? (
           <IconButton onClick={() => onDescClick(value)}>
             <InsertPhotoRoundedIcon />
           </IconButton>
-        ) : null;
+        ) : (
+          value.description
+        );
       },
     },
     { Header: 'Категория', accessor: (x) => x.category },
@@ -100,7 +100,7 @@ const Index: NextPage = () => {
   });
   const columns = React.useMemo(
     () =>
-      getColumns({
+      getRiskColumns({
         onUpdate: (r) => riskForm.open({ formSt: r, onSubmit: updateMutation.mutate }),
         onDelete: (r) => deleteMutation.mutate(r),
         onDescClick: (r) =>

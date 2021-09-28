@@ -8,6 +8,7 @@ import { ResponsiveImage } from './ResponsiveImage';
 
 export const ImageModal: React.FC = observer(() => {
   const { imageModal } = useStores();
+
   return (
     <Dialog open={imageModal.isOpen} onClose={imageModal.onClose} keepMounted={false}>
       <DialogTitle>{imageModal.title}</DialogTitle>

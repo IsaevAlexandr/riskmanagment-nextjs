@@ -50,13 +50,15 @@ export function Table<T extends {}>({ columns, data }: { columns: Column<T>[]; d
 
                     const { key, ...props } = column.getHeaderProps(additionalSortProps);
 
+                    const cellContent = column.render('Header');
+
                     return (
                       <TableCell {...props} key={key}>
                         <TableSortLabel
-                          active={column.isSorted}
+                          active={column.isSorted && Boolean(cellContent)}
                           direction={column.isSortedDesc ? 'desc' : 'asc'}
                         >
-                          {column.render('Header')}
+                          {cellContent}
                         </TableSortLabel>
                       </TableCell>
                     );

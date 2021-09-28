@@ -3,7 +3,7 @@ interface GeneratedEvent {
   message: string;
 }
 
-// images from "public" folder
+// images serves from "public" folder
 export const eventGenerator = (): GeneratedEvent => {
   // случайное число от 0 до 100
   const random = Math.random() * 100;

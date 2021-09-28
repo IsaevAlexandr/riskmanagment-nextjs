@@ -1,34 +1,29 @@
 import * as React from 'react';
-import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import { NextPage } from 'next';
-import { Breadcrumbs, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
 import { useMutation, useQuery } from 'react-query';
-import { observer } from 'mobx-react-lite';
-import AddIcon from '@mui/icons-material/Add';
-import { DateRangePicker, LocalizationProvider } from '@mui/lab';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import { Box } from '@mui/system';
 import { CellProps, Column } from 'react-table';
+import { Container, Typography } from '@mui/material';
+import { DateRangePicker, LocalizationProvider } from '@mui/lab';
+import { observer } from 'mobx-react-lite';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import { Breadcrumbs, Button, Grid, IconButton, Stack, TextField } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { Box } from '@mui/system';
 
-import { Layout } from '../components/Layout';
+import { Layout, EventModalForm, Table, ResponsiveImage } from '../components';
 import { eventCrudApi } from '../api';
 import { useStores } from '../hooks';
-import { EventModalForm } from '../components/EventModalForm';
-import { Table } from '../components/Table';
-import { ResponsiveImage } from '../components/ResponsiveImage';
 
 import { Event } from '.prisma/client';
 
-const getColumns = ({
-  onUpdate,
-  onDelete,
-}: {
+interface GetEventColumns {
   onUpdate(e: Event): void;
   onDelete(e: Event): void;
-}): Column<Event>[] => {
+}
+
+const getEventColumns = ({ onUpdate, onDelete }: GetEventColumns): Column<Event>[] => {
   return [
     { Header: 'N', accessor: (x) => x.id, width: 50 },
 
@@ -107,7 +102,7 @@ const Events: NextPage = () => {
 
   const columns = React.useMemo(
     () =>
-      getColumns({
+      getEventColumns({
         onUpdate: (e) => eventForm.open({ formSt: e, onSubmit: (e) => updateMutation.mutate(e) }),
         onDelete: (e) => deleteMutation.mutate(e),
       }),

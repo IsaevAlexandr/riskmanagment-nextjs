@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-import { prismaClient } from '../utils/prismaClient';
+import { prismaClient } from './prismaClient';
 
 async function main() {
   await prismaClient.event.create({

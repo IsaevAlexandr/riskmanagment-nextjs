@@ -1,14 +1,13 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { RegisterUserDto } from '../../interfaces';
-import { getCredentialsFromPassword } from '../../utils/authService';
-import { prismaClient } from '../../utils/prismaClient';
+import { getCredentialsFromPassword } from '../../utils';
+import { prismaClient } from '../../prisma/prismaClient';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === 'POST') {
     const { username, password } = JSON.parse(req.body) as RegisterUserDto;
 
-    // TODO: попробовать сделать за один апрос через
     const isUserInDb = await prismaClient.user.findUnique({
       where: { username },
     });
